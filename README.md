@@ -1,0 +1,13 @@
+# BankingApp
+BankingApp:
+- User can register/login
+- User can send/receive money
+- User can TopUp his account
+- User can track account balance
+- User can view his transactions history
+
+Extra ideas:
+- User can request money from another user
+- Implement transaction fees
+- Implement cards
+- Implement transactions sorting
