@@ -10,11 +10,12 @@ namespace Persistence.Models
     {
         public Guid Id { get; set; }
         public string FirebaseId { get; set; }
+        public string Username { get; set; }
         public decimal CurrentAccount { get; set; }
         public decimal Balance { get; set; }
         public string Transaction { get; set; }
         public decimal Deposit { get; set; }
         public decimal Shares { get; set; }
-
+        public string Email { get; set; }
     }
 }
