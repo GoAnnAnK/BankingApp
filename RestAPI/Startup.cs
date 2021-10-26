@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Domain;
 using Domain.Clients.Firebase.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+
 
 namespace RestAPI
 {
@@ -25,8 +30,14 @@ namespace RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
+            
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestAPI", Version = "v1" });
@@ -73,10 +84,11 @@ namespace RestAPI
                 });
 
             services.Configure<FirebaseOptions>(Configuration.GetSection("Firebase"));
-
+        //    services.AddFirebaseClient();
             services
                 .AddDomain()
-                .AddPersistence(Configuration);
+                .AddPersistence(Configuration)
+                .AddControllers();
         
         }
 
@@ -93,8 +105,9 @@ namespace RestAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

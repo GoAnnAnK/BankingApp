@@ -7,6 +7,7 @@ using System.Text.Json;
 using Domain.Services;
 using Contracts.Models.Response;
 using Contracts.Models.Request;
+using Domain.Exceptions;
 
 namespace RestAPI.Controllers
 {
@@ -24,70 +25,37 @@ namespace RestAPI.Controllers
         [HttpPost]
         [Route("Register")]
         public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
-                {
-                    var newUser = await _authService.RegisterAsync(request);
+        {
+            try
+            {
+                var response = await _authService.RegisterAsync(request);
 
-                    return Ok(newUser);
-                }
-         [Authorize]
+                return response;
+            }
+
+            catch (FirebaseException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+         
          [HttpPost]
          [Route("Login")]
          public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
-                {
-                    var returnedUser = await _authService.LoginAsync(request);
+         {
+            try
+            {
+                var response = await _authService.LoginAsync(request);
 
-                    return Ok(returnedUser);
-                }
+                return response;
+            }
 
-/*                [HttpPost]
-                [Route("changePassword")]
-                [Authorize]
+            catch (FirebaseException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-                public async Task<ActionResult<EditUserResponse>> ChangePassword(ChangePasswordRequest request)
-                {
-                    Request.Headers.TryGetValue("Authorization", out var idToken);
 
-                    //var idToken = this.GetHeaderData("Authorization");
-
-                    var idTokenValue = idToken.First().Remove(0, 7); // removes 'Bearer ' from the header
-
-                    var response = await _userService.ChangePasswordAsync(new ChangePasswordRequestModel
-                    {
-                        IdToken = idTokenValue,
-                        NewPassword = request.NewPassword,
-                        ReturnSecureToken = true
-                    });
-
-                    return Ok(response);
-                }
-
-                [HttpPost]
-                [Route("changeEmail")]
-                [Authorize]
-
-                public async Task<ActionResult<EditUserResponse>> ChangeEmail(ChangeEmailRequest request)
-                {
-                    var userId = HttpContext.User.Claims.SingleOrDefault(claim => claim.Type == "user_id");
-
-                    if (userId is null)
-                    {
-                        return NotFound();
-                    }
-
-                    var user = await _userService.GetUserAsync(userId.Value);
-
-                    Request.Headers.TryGetValue("Authorization", out var idToken);
-
-                    var idTokenValue = idToken.ToString().Remove(0, 7); // removes 'Bearer ' from the header
-
-                    var response = await _userService.ChangeEmailAsync(user.UserId, new ChangeEmailRequestModel
-                    {
-                        IdToken = idTokenValue,
-                        NewEmail = request.NewEmail,
-                        ReturnSecureToken = true
-                    });
-
-                    return Ok(response);
-                }*/
     }
 }

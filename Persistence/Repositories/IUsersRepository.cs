@@ -1,4 +1,6 @@
 ﻿using Persistence.Models;
+using Persistence.Models.ReadModels;
+using Persistence.Models.WriteModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +11,10 @@ namespace Persistence.Repositories
 {
     public interface IUsersRepository
     {
-        Task<int> SaveAsync(UserReadModel model);
+        Task<int> CreateUserAsync(UserWriteModel model);
 
-        Task<UserReadModel> GetAsync(string firebaseId);
+        Task<UserReadModel> GetUserByFirebaseIdAsync(string firebaseId);
+
+        Task<int> DeleteUserByIdAsync(Guid userId);
     }
 }

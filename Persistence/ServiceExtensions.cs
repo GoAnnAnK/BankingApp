@@ -2,7 +2,7 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Persistence.Repositories;
 
 namespace Persistence
 {
@@ -21,7 +21,7 @@ namespace Persistence
 
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-     //       services.AddSingleton<IUsersRepository, UsersRepository>();
+            services.AddSingleton<IUsersRepository, UsersRepository>();
 
             return services;
         }

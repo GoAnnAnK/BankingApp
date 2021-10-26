@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence.Models
+namespace Persistence.Models.ReadModels
 {
     public class UserReadModel
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public string FirebaseId { get; set; }
         public string Username { get; set; }
         public decimal CurrentAccount { get; set; }
